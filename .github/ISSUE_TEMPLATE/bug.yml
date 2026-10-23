@@ -65,10 +65,15 @@ body:
   - type: textarea
     id: logs
     attributes:
-      label: Logs
-      description: >-
-        Drag in logs/latest.log from the instance folder, and the newest file in crash-reports/
-        if the game crashed. Needed for crashes and errors.
+      label: Game log
+      description: Drag in `logs/latest.log` from the instance folder. Your launcher can open the folder for you.
+    validations:
+      required: true
+  - type: textarea
+    id: crash
+    attributes:
+      label: Crash report
+      description: If the game crashed, drag in the newest file in `crash-reports/` as well.
   - type: checkboxes
     id: checks
     attributes:
