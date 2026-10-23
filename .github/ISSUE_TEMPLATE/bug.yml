@@ -11,6 +11,8 @@ body:
           required: true
         - label: It still happens without mods, resource packs or shaders I added myself.
           required: true
+        - label: I searched the [open issues](https://github.com/Pixel-Dream-Studios/modpack-issues/issues) and it is not reported yet.
+          required: true
   - type: dropdown
     id: pack
     attributes:
