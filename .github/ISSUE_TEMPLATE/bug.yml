@@ -2,6 +2,15 @@ name: Bug report
 description: Something in a pack crashes, is broken, or does not work as it should.
 type: bug
 body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before reporting
+      options:
+        - label: I am on the newest version of the pack.
+          required: true
+        - label: It still happens without mods, resource packs or shaders I added myself.
+          required: true
   - type: dropdown
     id: pack
     attributes:
@@ -74,12 +83,3 @@ body:
     attributes:
       label: Crash report
       description: If the game crashed, drag in the newest file in `crash-reports/` as well.
-  - type: checkboxes
-    id: checks
-    attributes:
-      label: Before reporting
-      options:
-        - label: I am on the newest version of the pack.
-          required: true
-        - label: It still happens without mods, resource packs or shaders I added myself.
-          required: true
