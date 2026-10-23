@@ -7,7 +7,6 @@ body:
     attributes:
       label: Modpack
       options:
-        - Choose a modpack
         - "Arcadia: Shadowfall"
         - Avalon Reborn
         - "Create: Industrialized Tech"

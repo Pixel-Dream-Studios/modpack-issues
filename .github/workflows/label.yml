@@ -1,6 +1,6 @@
 # Labels each issue with the pack its form names and assigns the pack's developer. When the
-# reporter edits the pack, the labels follow. An issue left on "Choose a modpack" gets
-# "needs info" and a comment asking for the pack; both go once the reporter picks one.
+# reporter edits the pack, the labels follow. An issue opened without the form names no pack: it
+# gets "needs info" and a comment asking for one, and both go once a pack is added.
 name: label
 on:
   issues:
