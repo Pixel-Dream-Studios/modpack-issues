@@ -18,9 +18,9 @@ jobs:
               'Arcadia: Shadowfall':         { labels: ['arcadia-shadowfall'], dev: 'Bandit-bytes' },
               'Avalon Reborn':               { labels: ['avalon-reborn'] },
               'Create: Industrialized Tech': { labels: ['create-industrialized-tech'], dev: 'VeroxUniverse' },
-              'Fantasy MC (Fabric)':         { labels: ['fantasy-mc', 'fabric'], dev: 'thrasos-dev' },
-              'Fantasy MC (NeoForge)':       { labels: ['fantasy-mc', 'neoforge'], dev: 'thrasos-dev' },
-              'Legacies 26':                 { labels: ['legacies'] },
+              'Fantasy MC Fabric':           { labels: ['fantasy-mc', 'fabric'], dev: 'thrasos-dev' },
+              'Fantasy MC NeoForge':         { labels: ['fantasy-mc', 'neoforge'], dev: 'thrasos-dev' },
+              'Legacies':                    { labels: ['legacies'] },
               'New Dawn [RPG]':              { labels: ['new-dawn'], dev: 'KevzCz' },
               'Valor':                       { labels: ['valor'], dev: 'thrasos-dev' },
             };
