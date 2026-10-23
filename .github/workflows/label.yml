@@ -1,6 +1,6 @@
 # Labels each issue with the pack its form names and assigns the pack's developer. When the
-# reporter edits the pack, the labels follow. An issue opened without the form names no pack: it
-# gets "needs info" and a comment asking for one, and both go once a pack is added.
+# reporter edits the pack, the label follows. An issue opened without the form names no pack: it
+# gets "needs info" and a comment asking for one. The label goes once a pack is added.
 name: label
 on:
   issues:
@@ -15,14 +15,14 @@ jobs:
         with:
           script: |
             const packs = {
-              'Arcadia: Shadowfall':         { labels: ['arcadia-shadowfall'], dev: 'Bandit-bytes' },
-              'Avalon Reborn':               { labels: ['avalon-reborn'], dev: 'GammaNe0' },
-              'Create: Industrialized Tech': { labels: ['create-industrialized-tech'], dev: 'VeroxUniverse' },
-              'Fantasy MC Fabric':           { labels: ['fantasy-mc', 'fabric'], dev: 'thrasos-dev' },
-              'Fantasy MC NeoForge':         { labels: ['fantasy-mc', 'neoforge'], dev: 'thrasos-dev' },
-              'Legacies':                    { labels: ['legacies'], dev: 'Rebel459' },
-              'New Dawn [RPG]':              { labels: ['new-dawn'], dev: 'KevzCz' },
-              'Valor':                       { labels: ['valor'], dev: 'thrasos-dev' },
+              'Arcadia: Shadowfall':         { label: 'arcadia-shadowfall', dev: 'Bandit-bytes' },
+              'Avalon Reborn':               { label: 'avalon-reborn', dev: 'GammaNe0' },
+              'Create: Industrialized Tech': { label: 'create-industrialized-tech', dev: 'VeroxUniverse' },
+              'Fantasy MC Fabric':           { label: 'fantasy-mc-fabric', dev: 'thrasos-dev' },
+              'Fantasy MC NeoForge':         { label: 'fantasy-mc-neoforge', dev: 'thrasos-dev' },
+              'Legacies':                    { label: 'legacies', dev: 'Rebel459' },
+              'New Dawn [RPG]':              { label: 'new-dawn', dev: 'KevzCz' },
+              'Valor':                       { label: 'valor', dev: 'thrasos-dev' },
             };
             const issue = context.payload.issue;
             const ref = { ...context.repo, issue_number: issue.number };
@@ -47,12 +47,11 @@ jobs:
               }
             }
 
-            const ours = new Set(Object.values(packs).flatMap(p => p.labels));
+            const ours = new Set(Object.values(packs).map(p => p.label));
             for (const name of have) {
-              if (ours.has(name) && !pack.labels.includes(name)) await github.rest.issues.removeLabel({ ...ref, name });
+              if (ours.has(name) && name !== pack.label) await github.rest.issues.removeLabel({ ...ref, name });
             }
-            const add = pack.labels.filter(name => !have.includes(name));
-            if (add.length) await github.rest.issues.addLabels({ ...ref, labels: add });
+            if (!have.includes(pack.label)) await github.rest.issues.addLabels({ ...ref, labels: [pack.label] });
             if (pack.dev && issue.assignees.length === 0) {
               await github.rest.issues.addAssignees({ ...ref, assignees: [pack.dev] });
             }
