@@ -1,8 +1,8 @@
 # Modpack issues
 
 Bug reports and suggestions for the Pixel Dream Studios modpacks: Arcadia: Shadowfall, Avalon
-Reborn, Create: Industrialized Tech, Fantasy MC, Legacies 26 and Valor. Arcadia [RPG] is no longer
-maintained.
+Reborn, Create: Industrialized Tech, Fantasy MC, Legacies 26, New Dawn [RPG] and Valor. Arcadia
+[RPG] is no longer maintained.
 
 [Report a bug](https://github.com/Pixel-Dream-Studios/modpack-issues/issues/new?template=bug.yml) ·
 [Suggest something](https://github.com/Pixel-Dream-Studios/modpack-issues/issues/new?template=suggestion.yml)

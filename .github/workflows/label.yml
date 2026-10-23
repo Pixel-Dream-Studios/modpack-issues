@@ -21,6 +21,7 @@ jobs:
               'Fantasy MC (Fabric)':         { labels: ['fantasy-mc', 'fabric'], dev: 'thrasos-dev' },
               'Fantasy MC (NeoForge)':       { labels: ['fantasy-mc', 'neoforge'], dev: 'thrasos-dev' },
               'Legacies 26':                 { labels: ['legacies'] },
+              'New Dawn [RPG]':              { labels: ['new-dawn'], dev: 'KevzCz' },
               'Valor':                       { labels: ['valor'], dev: 'thrasos-dev' },
             };
             const issue = context.payload.issue;
