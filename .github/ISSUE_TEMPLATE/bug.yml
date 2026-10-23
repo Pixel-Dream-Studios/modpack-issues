@@ -1,6 +1,6 @@
 name: Bug report
 description: Something in a pack crashes, is broken, or does not work as it should.
-labels: ["bug"]
+type: bug
 body:
   - type: dropdown
     id: pack
@@ -8,11 +8,14 @@ body:
       label: Modpack
       options:
         - "Arcadia: Shadowfall"
+        - Avalon Reborn
+        - "Create: Industrialized Tech"
         - Fantasy MC (Fabric)
         - Fantasy MC (NeoForge)
+        - Legacies 26
         - Valor
     validations:
-      required: true
+      required: false
   - type: input
     id: version
     attributes:

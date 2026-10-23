@@ -1,4 +1,6 @@
-# Labels each issue with the pack its form names, and swaps the label when the reporter edits it.
+# Labels each issue with the pack its form names and assigns the pack's developer. When the
+# reporter edits the pack, the labels follow. An issue that names no pack gets "needs info" and a
+# comment asking for it.
 name: label
 on:
   issues:
@@ -13,20 +15,35 @@ jobs:
         with:
           script: |
             const packs = {
-              'Arcadia: Shadowfall': ['arcadia-shadowfall'],
-              'Fantasy MC (Fabric)': ['fantasy-mc', 'fabric'],
-              'Fantasy MC (NeoForge)': ['fantasy-mc', 'neoforge'],
-              'Valor': ['valor'],
+              'Arcadia: Shadowfall':         { labels: ['arcadia-shadowfall'], dev: 'Bandit-bytes' },
+              'Avalon Reborn':               { labels: ['avalon-reborn'] },
+              'Create: Industrialized Tech': { labels: ['create-industrialized-tech'], dev: 'VeroxUniverse' },
+              'Fantasy MC (Fabric)':         { labels: ['fantasy-mc', 'fabric'], dev: 'thrasos-dev' },
+              'Fantasy MC (NeoForge)':       { labels: ['fantasy-mc', 'neoforge'], dev: 'thrasos-dev' },
+              'Legacies 26':                 { labels: ['legacies'] },
+              'Valor':                       { labels: ['valor'], dev: 'thrasos-dev' },
             };
             const issue = context.payload.issue;
-            const m = (issue.body || '').match(/### Modpack\s+([^\n]+)/);
-            if (!m) return;
-            const want = packs[m[1].trim()] || [];
-            const ours = new Set(Object.values(packs).flat());
-            const have = issue.labels.map(l => l.name);
             const ref = { ...context.repo, issue_number: issue.number };
-            for (const name of have) {
-              if (ours.has(name) && !want.includes(name)) await github.rest.issues.removeLabel({ ...ref, name });
+            const m = (issue.body || '').match(/### Modpack\s+([^\n]+)/);
+            const pack = m ? packs[m[1].trim()] : undefined;
+            const have = issue.labels.map(l => l.name);
+
+            if (!pack) {
+              if (context.payload.action === 'opened') {
+                await github.rest.issues.addLabels({ ...ref, labels: ['needs info'] });
+                await github.rest.issues.createComment({ ...ref, body:
+                  'Which modpack is this about? Edit the issue (the ... menu, then Edit) and pick it under Modpack.' });
+              }
+              return;
             }
-            const add = want.filter(name => !have.includes(name));
+
+            const ours = new Set(Object.values(packs).flatMap(p => p.labels));
+            for (const name of have) {
+              if (ours.has(name) && !pack.labels.includes(name)) await github.rest.issues.removeLabel({ ...ref, name });
+            }
+            const add = pack.labels.filter(name => !have.includes(name));
             if (add.length) await github.rest.issues.addLabels({ ...ref, labels: add });
+            if (pack.dev && issue.assignees.length === 0) {
+              await github.rest.issues.addAssignees({ ...ref, assignees: [pack.dev] });
+            }

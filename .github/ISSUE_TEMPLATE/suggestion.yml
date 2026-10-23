@@ -1,6 +1,6 @@
 name: Suggestion
 description: An idea for a pack, such as a mod to add or something to change.
-labels: ["suggestion"]
+type: feature
 body:
   - type: dropdown
     id: pack
@@ -8,11 +8,14 @@ body:
       label: Modpack
       options:
         - "Arcadia: Shadowfall"
+        - Avalon Reborn
+        - "Create: Industrialized Tech"
         - Fantasy MC (Fabric)
         - Fantasy MC (NeoForge)
+        - Legacies 26
         - Valor
     validations:
-      required: true
+      required: false
   - type: textarea
     id: idea
     attributes:
