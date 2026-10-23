@@ -1,10 +1,9 @@
 # Modpack issues
 
-Bug reports and suggestions for the Pixel Dream Studios modpacks: Arcadia: Shadowfall, Avalon
-Reborn, Create: Industrialized Tech, Fantasy MC, Legacies, New Dawn [RPG] and Valor.
+Bug reports and suggestions for the Pixel Dream Studios modpacks.
 
-[Report a bug](https://github.com/Pixel-Dream-Studios/modpack-issues/issues/new?template=bug.yml) ·
-[Suggest something](https://github.com/Pixel-Dream-Studios/modpack-issues/issues/new?template=suggestion.yml)
+[Report a bug](https://github.com/Pixel-Dream-Studios/modpack-issues/issues/new?template=bug.yml) or
+[suggest something](https://github.com/Pixel-Dream-Studios/modpack-issues/issues/new?template=suggestion.yml).
 
 Before you report a bug:
 
