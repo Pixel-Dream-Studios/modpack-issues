@@ -7,6 +7,7 @@ body:
     attributes:
       label: Modpack
       options:
+        - Choose a modpack
         - "Arcadia: Shadowfall"
         - Avalon Reborn
         - "Create: Industrialized Tech"
@@ -15,7 +16,7 @@ body:
         - Legacies 26
         - Valor
     validations:
-      required: false
+      required: true
   - type: input
     id: version
     attributes:

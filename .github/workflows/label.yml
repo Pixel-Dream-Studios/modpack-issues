@@ -1,6 +1,6 @@
 # Labels each issue with the pack its form names and assigns the pack's developer. When the
-# reporter edits the pack, the labels follow. An issue that names no pack gets "needs info" and a
-# comment asking for it.
+# reporter edits the pack, the labels follow. An issue left on "Choose a modpack" gets
+# "needs info" and a comment asking for the pack; both go once the reporter picks one.
 name: label
 on:
   issues:
@@ -36,6 +36,14 @@ jobs:
                   'Which modpack is this about? Edit the issue (the ... menu, then Edit) and pick it under Modpack.' });
               }
               return;
+            }
+
+            // The pack was picked after our question: take back the "needs info" it added.
+            if (have.includes('needs info')) {
+              const comments = await github.paginate(github.rest.issues.listComments, ref);
+              if (comments.some(c => c.user.login === 'github-actions[bot]' && c.body.startsWith('Which modpack'))) {
+                await github.rest.issues.removeLabel({ ...ref, name: 'needs info' });
+              }
             }
 
             const ours = new Set(Object.values(packs).flatMap(p => p.labels));
