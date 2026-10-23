@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discord
+    url: https://discord.pixeldreamstudios.net
+    about: Questions, help with setup, and chat.
+  - name: Wiki
+    url: https://wiki.pixeldreamstudios.net
+    about: Guides for the packs and our mods.

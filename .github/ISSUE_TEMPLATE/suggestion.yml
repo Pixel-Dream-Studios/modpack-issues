@@ -1,0 +1,26 @@
+name: Suggestion
+description: An idea for a pack, such as a mod to add or something to change.
+labels: ["suggestion"]
+body:
+  - type: dropdown
+    id: pack
+    attributes:
+      label: Modpack
+      options:
+        - "Arcadia: Shadowfall"
+        - Fantasy MC (Fabric)
+        - Fantasy MC (NeoForge)
+        - Valor
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: What it would add to the pack, or what problem it solves.

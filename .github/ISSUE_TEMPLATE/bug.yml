@@ -1,0 +1,76 @@
+name: Bug report
+description: Something in a pack crashes, is broken, or does not work as it should.
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: pack
+    attributes:
+      label: Modpack
+      options:
+        - "Arcadia: Shadowfall"
+        - Fantasy MC (Fabric)
+        - Fantasy MC (NeoForge)
+        - Valor
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Pack version
+      description: The launcher shows it next to the pack.
+      placeholder: "1.0.2"
+    validations:
+      required: true
+  - type: dropdown
+    id: launcher
+    attributes:
+      label: Launcher
+      options:
+        - CurseForge app
+        - Modrinth App
+        - Prism Launcher
+        - ATLauncher
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where it happens
+      options:
+        - Singleplayer
+        - On a server
+        - Both
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to make it happen again
+      placeholder: |
+        1.
+        2.
+        3.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: >-
+        Drag in logs/latest.log from the instance folder, and the newest file in crash-reports/
+        if the game crashed. Needed for crashes and errors.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before reporting
+      options:
+        - label: I am on the newest version of the pack.
+          required: true
+        - label: It still happens without mods, resource packs or shaders I added myself.
+          required: true
