@@ -20,7 +20,7 @@ jobs:
               'Create: Industrialized Tech': { labels: ['create-industrialized-tech'], dev: 'VeroxUniverse' },
               'Fantasy MC Fabric':           { labels: ['fantasy-mc', 'fabric'], dev: 'thrasos-dev' },
               'Fantasy MC NeoForge':         { labels: ['fantasy-mc', 'neoforge'], dev: 'thrasos-dev' },
-              'Legacies':                    { labels: ['legacies'] },
+              'Legacies':                    { labels: ['legacies'], dev: 'Rebel459' },
               'New Dawn [RPG]':              { labels: ['new-dawn'], dev: 'KevzCz' },
               'Valor':                       { labels: ['valor'], dev: 'thrasos-dev' },
             };
