@@ -1,10 +1,14 @@
 # Labels each issue with the pack its form names and assigns the pack's developer. When the
-# reporter edits the pack, the label follows. An issue opened without the form names no pack: it
-# gets "needs info" and a comment asking for one. The label goes once a pack is added.
+# reporter edits the pack, the label follows. An issue opened through the API or gh has no form, or
+# a pack name the form no longer has: it gets the pack its title and body name, if they name exactly
+# one. Otherwise it gets "needs info" and a comment asking which pack, and the reply that names one
+# labels it. A guess never replaces a pack label someone set.
 name: label
 on:
   issues:
     types: [opened, edited]
+  issue_comment:
+    types: [created]
 permissions:
   issues: write
 jobs:
@@ -15,26 +19,35 @@ jobs:
         with:
           script: |
             const packs = {
-              'Arcadia Shadowfall':          { label: 'arcadia-shadowfall', dev: 'Bandit-bytes' },
-              'Avalon Reborn':               { label: 'avalon-reborn', dev: 'GammaNe0' },
-              'Create: Industrialized Tech': { label: 'create-industrialized-tech', dev: 'VeroxUniverse' },
-              'Fantasy MC Fabric':           { label: 'fantasy-mc-fabric', dev: 'thrasos-dev' },
-              'Fantasy MC NeoForge':         { label: 'fantasy-mc-neoforge', dev: 'thrasos-dev' },
-              'Legacies':                    { label: 'legacies', dev: 'Rebel459' },
-              'New Dawn [RPG]':              { label: 'new-dawn', dev: 'KevzCz' },
-              'Valor':                       { label: 'valor', dev: 'thrasos-dev' },
+              // names: what the text must contain, all of it, to name the pack when the form does not.
+              'Arcadia Shadowfall':          { label: 'arcadia-shadowfall', dev: 'Bandit-bytes', names: [/arcadia|shadowfall/i] },
+              'Avalon Reborn':               { label: 'avalon-reborn', dev: 'GammaNe0', names: [/avalon/i] },
+              'Create: Industrialized Tech': { label: 'create-industrialized-tech', dev: 'VeroxUniverse', names: [/industrialized tech/i] },
+              'Fantasy MC Fabric':           { label: 'fantasy-mc-fabric', dev: 'thrasos-dev', names: [/fantasy ?mc/i, /fabric/i] },
+              'Fantasy MC NeoForge':         { label: 'fantasy-mc-neoforge', dev: 'thrasos-dev', names: [/fantasy ?mc/i, /neo ?forge/i] },
+              'Legacies':                    { label: 'legacies', dev: 'Rebel459', names: [/legacies/i] },
+              'New Dawn [RPG]':              { label: 'new-dawn', dev: 'KevzCz', names: [/new dawn/i] },
+              'Valor':                       { label: 'valor', dev: 'thrasos-dev', names: [/\bvalor\b/i] },
             };
-            const issue = context.payload.issue;
+            const { issue, comment } = context.payload;
             const ref = { ...context.repo, issue_number: issue.number };
-            const m = (issue.body || '').match(/### Modpack\s+([^\n]+)/);
-            const pack = m ? packs[m[1].trim()] : undefined;
             const have = issue.labels.map(l => l.name);
+            const ours = new Set(Object.values(packs).map(p => p.label));
+            // Only a reply to our question names the pack.
+            if (comment && !have.includes('needs info')) return;
+            const m = (issue.body || '').match(/### Modpack\s+([^\n]+)/);
+            let pack = m ? packs[m[1].trim()] : undefined;
+            if (!pack) {
+              if (have.some(name => ours.has(name))) return;
+              const text = comment ? comment.body : `${issue.title}\n${issue.body || ''}`;
+              const named = Object.values(packs).filter(p => p.names.every(r => r.test(text)));
+              if (named.length === 1) pack = named[0];
+            }
 
             if (!pack) {
               if (context.payload.action === 'opened') {
                 await github.rest.issues.addLabels({ ...ref, labels: ['needs info'] });
-                await github.rest.issues.createComment({ ...ref, body:
-                  'Which modpack is this about? Edit the issue (the ... menu, then Edit) and pick it under Modpack.' });
+                await github.rest.issues.createComment({ ...ref, body: 'Which modpack is this about? Reply with its name.' });
               }
               return;
             }
@@ -47,7 +60,6 @@ jobs:
               }
             }
 
-            const ours = new Set(Object.values(packs).map(p => p.label));
             for (const name of have) {
               if (ours.has(name) && name !== pack.label) await github.rest.issues.removeLabel({ ...ref, name });
             }
