@@ -18,7 +18,7 @@ body:
     attributes:
       label: Modpack
       options:
-        - "Arcadia: Shadowfall"
+        - Arcadia Shadowfall
         - Avalon Reborn
         - "Create: Industrialized Tech"
         - Fantasy MC Fabric

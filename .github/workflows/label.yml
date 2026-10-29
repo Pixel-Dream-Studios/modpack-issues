@@ -15,7 +15,7 @@ jobs:
         with:
           script: |
             const packs = {
-              'Arcadia: Shadowfall':         { label: 'arcadia-shadowfall', dev: 'Bandit-bytes' },
+              'Arcadia Shadowfall':          { label: 'arcadia-shadowfall', dev: 'Bandit-bytes' },
               'Avalon Reborn':               { label: 'avalon-reborn', dev: 'GammaNe0' },
               'Create: Industrialized Tech': { label: 'create-industrialized-tech', dev: 'VeroxUniverse' },
               'Fantasy MC Fabric':           { label: 'fantasy-mc-fabric', dev: 'thrasos-dev' },
