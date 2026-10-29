@@ -1,8 +1,9 @@
 # Labels each issue with the pack its form names and assigns the pack's developer. When the
 # reporter edits the pack, the label follows. An issue opened through the API or gh has no form, or
 # a pack name the form no longer has: it gets the pack its title and body name, if they name exactly
-# one. Otherwise it gets "needs info" and a comment asking which pack, and the reply that names one
-# labels it. A guess never replaces a pack label someone set.
+# one. Otherwise it gets "needs info" and a comment asking which pack, listing the packs it might be.
+# The reply that names one labels it. A reply can name part, as "Fabric" to an issue about Fantasy
+# MC. A guess never replaces a pack label someone set.
 name: label
 on:
   issues:
@@ -37,17 +38,23 @@ jobs:
             if (comment && !have.includes('needs info')) return;
             const m = (issue.body || '').match(/### Modpack\s+([^\n]+)/);
             let pack = m ? packs[m[1].trim()] : undefined;
+            let maybe = [];
             if (!pack) {
               if (have.some(name => ours.has(name))) return;
-              const text = comment ? comment.body : `${issue.title}\n${issue.body || ''}`;
-              const named = Object.values(packs).filter(p => p.names.every(r => r.test(text)));
+              const text = `${issue.title}\n${issue.body || ''}`;
+              const said = comment ? comment.body : text;
+              const named = Object.values(packs).filter(p =>
+                p.names.every(r => r.test(said) || r.test(text)) && p.names.some(r => r.test(said)));
               if (named.length === 1) pack = named[0];
+              else maybe = Object.keys(packs).filter(k => packs[k].names[0].test(said));
             }
 
             if (!pack) {
-              if (context.payload.action === 'opened') {
-                await github.rest.issues.addLabels({ ...ref, labels: ['needs info'] });
-                await github.rest.issues.createComment({ ...ref, body: 'Which modpack is this about? Reply with its name.' });
+              // Ask when the issue opens, and again when a reply leaves it between packs.
+              if (context.payload.action === 'opened' || (comment && maybe.length > 1)) {
+                if (!comment) await github.rest.issues.addLabels({ ...ref, labels: ['needs info'] });
+                const which = maybe.length > 1 ? `: ${maybe.slice(0, -1).join(', ')} or ${maybe.at(-1)}` : '';
+                await github.rest.issues.createComment({ ...ref, body: `Which modpack is this about${which}? Reply with its name.` });
               }
               return;
             }
