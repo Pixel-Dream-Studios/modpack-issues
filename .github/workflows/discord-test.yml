@@ -1,0 +1,14 @@
+name: discord-test
+on: workflow_dispatch
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          curl --fail-with-body -sS -H 'Content-Type: application/json' "$DISCORD_WEBHOOK" -d '{
+            "content": "Test post. New and closed issues from the [issue tracker](https://github.com/Pixel-Dream-Studios/modpack-issues) will appear here.",
+            "allowed_mentions": {"parse": []},
+            "flags": 4
+          }'
