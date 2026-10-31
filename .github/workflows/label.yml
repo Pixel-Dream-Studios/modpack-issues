@@ -3,11 +3,12 @@
 # a pack name the form no longer has: it gets the pack its title and body name, if they name exactly
 # one. Otherwise it gets "needs info" and a comment asking which pack, listing the packs it might be.
 # The reply that names one labels it. A reply can name part, as "Fabric" to an issue about Fantasy
-# MC. A guess never replaces a pack label someone set.
+# MC. A guess never replaces a pack label someone set. With the DISCORD_WEBHOOK secret set, it posts
+# each issue to Discord once its pack is known, and again when it closes.
 name: label
 on:
   issues:
-    types: [opened, edited]
+    types: [opened, edited, closed]
   issue_comment:
     types: [created]
 permissions:
@@ -17,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v8
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         with:
           script: |
             const packs = {
@@ -34,6 +37,30 @@ jobs:
             const ref = { ...context.repo, issue_number: issue.number };
             const have = issue.labels.map(l => l.name);
             const ours = new Set(Object.values(packs).map(p => p.label));
+
+            // Anyone can write a title: no pings, and no markdown that breaks the link.
+            async function post(status, name) {
+              if (!process.env.DISCORD_WEBHOOK) return;
+              const title = issue.title.replace(/[\\`*_~|[\]()]/g, '\\$&');
+              const res = await fetch(process.env.DISCORD_WEBHOOK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  content: `${status}: **${name}** [#${issue.number} ${title}](${issue.html_url})`,
+                  allowed_mentions: { parse: [] },
+                  flags: 4, // No link preview.
+                }),
+              });
+              if (!res.ok) core.warning(`Discord: ${res.status} ${await res.text()}`);
+            }
+
+            if (context.payload.action === 'closed') {
+              const name = Object.keys(packs).find(k => have.includes(packs[k].label));
+              const done = issue.type?.name === 'Feature' ? 'Done' : 'Fixed';
+              if (name) await post(issue.state_reason === 'completed' ? done : 'Closed', name);
+              return;
+            }
+
             // Only a reply to our question names the pack.
             if (comment && !have.includes('needs info')) return;
             const m = (issue.body || '').match(/### Modpack\s+([^\n]+)/);
@@ -74,3 +101,4 @@ jobs:
             if (pack.dev && issue.assignees.length === 0) {
               await github.rest.issues.addAssignees({ ...ref, assignees: [pack.dev] });
             }
+            if (!have.some(name => ours.has(name))) await post('New', Object.keys(packs).find(k => packs[k] === pack));
